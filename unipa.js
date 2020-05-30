@@ -86,7 +86,7 @@ async function mvToClassRoomReservePage() {
 ----------- */
 async function dlClassRoomReserveStatus(option) {
   option = Object.assign({
-    building: 'C'
+    building: 'H'
   }, option);
 
   const buildigItem = {
@@ -106,6 +106,10 @@ async function dlClassRoomReserveStatus(option) {
     'Tennis': 13,
     'Ground': 14,
     'S': 15
+  }
+
+  if (!Object.keys(buildigItem).includes(option.building)) {
+    option.building = 'H'
   }
 
   try {

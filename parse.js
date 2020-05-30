@@ -8,14 +8,15 @@ function parseInputTime(text) {
   words = text.split(' ');
 
   switch (words.length) {
-    case 2:
-      startTimeWordIdx = 0;
-      endTimeWordIdx = 1;
-      dateDt = DateTime.local();
-      break;
     case 3:
       startTimeWordIdx = 0;
       endTimeWordIdx = 1;
+      dateDt = DateTime.local();
+      building = words[2];
+      break;
+    case 4:
+      startTimeWordIdx = 1;
+      endTimeWordIdx = 2;
       try {
         const dateWord = words[0];
         if (/^\d+$/.test(dateWord)) {
@@ -37,6 +38,7 @@ function parseInputTime(text) {
           message: '> 日付指定が不正です📅'
         };
       }
+      building = words[3];
       break;
     default:
       return {
@@ -77,7 +79,8 @@ function parseInputTime(text) {
 
     return {
       success: true,
-      timeRange: requestItvl
+      timeRange: requestItvl,
+      building
     }
   } catch (e) {
     return {

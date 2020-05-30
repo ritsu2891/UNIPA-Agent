@@ -31,7 +31,9 @@ async function searchEmptyRoom(req, res) {
     res.json(BuildMessage.classRoomReserveStatusArgConfirm(inputParseRes.timeRange));
   }
 
-  await UNIPA.dlClassRoomReserveStatus();
+  await UNIPA.dlClassRoomReserveStatus({
+    building: inputParseRes.building
+  });
   await Util.waitDownloadComplete(UNIPA.getDownloadPath());
   const interpretRes = await Interpret(UNIPA.getDownloadPath()).run(inputParseRes.timeRange);
   await UNIPA.tierDown();
