@@ -16,11 +16,11 @@ const Util = require('./util');
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// const listener = app.listen(process.env.APP_PORT, () => {
-//   console.log(`Server is listening on ${listener.address().port}`);
-// });
+const listener = app.listen(process.env.APP_PORT, () => {
+  console.log(`Server is listening on ${listener.address().port}`);
+});
 
-// app.post("/", searchEmptyRoom);
+app.post("/", searchEmptyRoom);
 
 async function searchEmptyRoom(req, res) {
   const inputParseRes = Parse.parseInputTime(req.body.text);
@@ -32,7 +32,9 @@ async function searchEmptyRoom(req, res) {
   }
 
   await UNIPA.dlClassRoomReserveStatus({
-    building: inputParseRes.building
+    building: inputParseRes.building,
+    startDateDt: inputParseRes.timeRange.s,
+    endDateDt: inputParseRes.timeRange.e
   });
   await Util.waitDownloadComplete(UNIPA.getDownloadPath());
   const interpretRes = await Interpret(UNIPA.getDownloadPath()).run(inputParseRes.timeRange);
@@ -40,11 +42,11 @@ async function searchEmptyRoom(req, res) {
 
   console.log(BuildMessage.classRoomReserveStatus(interpretRes.overlapReserved, interpretRes.emptyClasses));
 
-  // slack.chat.postMessage({
-  //   token: process.env.BOT_TOKEN, // ※Bot token 
-  //   channel: req.body.channel_id,
-  //   text: BuildMessage.classRoomReserveStatus(res.overlapReserved, res.emptyClasses),
-  // }).then(console.log).catch(console.error);
+  slack.chat.postMessage({
+    token: process.env.BOT_TOKEN, // ※Bot token 
+    channel: req.body.channel_id,
+    text: BuildMessage.classRoomReserveStatus(interpretRes.overlapReserved, interpretRes.emptyClasses),
+  }).then(console.log).catch(console.error);
 }
 
 module.exports = {searchEmptyRoom}

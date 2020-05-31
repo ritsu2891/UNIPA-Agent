@@ -32,13 +32,19 @@ async function init() {
   downloadPath = path.join(process.env.DL_BASE_PATH, uuid);
   fs.mkdirSync(downloadPath);
 
-
+  const width = 1200
+  const height = 800
+  
   browser = await puppeteer.launch({
-    headless: false,
+    headless: true,
     "ignoreHTTPSErrors": false,
     executablePath: process.env.CHROME_EXEC_PATH,
+    args: [
+      `--window-size=${ width },${ height }`
+    ],
   });
-  page = await browser.newPage();
+  page = (await browser.pages())[0];
+  await page.setViewport({ width, height });
   await page._client.send('Page.setDownloadBehavior', {
     behavior : 'allow',
     downloadPath: downloadPath
@@ -86,7 +92,9 @@ async function mvToClassRoomReservePage() {
 ----------- */
 async function dlClassRoomReserveStatus(option) {
   option = Object.assign({
-    building: 'H'
+    building: 'H',
+    startDateDt: DateTime.local(),
+    endDateDt: DateTime.local(),
   }, option);
 
   const buildigItem = {
@@ -117,10 +125,9 @@ async function dlClassRoomReserveStatus(option) {
     await loginUnipa();
     await mvToClassRoomReservePage();
 
-    todayDt = DateTime.local().toFormat("yyyy/MM/dd");
     page.waitFor(10);
-    await page.type("#funcForm\\:targetDateFrom\\:targetDateFrom_input", "_" + todayDt, {delay: 10}); // 期間指定のはじめ
-    await page.type("#funcForm\\:targetDateTo\\:targetDateTo_input", "_" + todayDt, {delay: 10}); // 期間指定のおわり
+    await page.type("#funcForm\\:targetDateFrom\\:targetDateFrom_input", "_" + option.startDateDt.toFormat("yyyy/MM/dd"), {delay: 10}); // 期間指定のはじめ
+    await page.type("#funcForm\\:targetDateTo\\:targetDateTo_input", "_" + option.endDateDt.toFormat("yyyy/MM/dd"), {delay: 10}); // 期間指定のおわり
     await page.click("#funcForm\\:conditionArea > * > *:nth-child(4) > *"); // 「詳細項目」の押下
     await page.click("#funcForm\\:building > *:nth-child(4)"); // 「建物」コンボボックスの展開
     await page.click(`#funcForm\\:building_panel > * > * > *:nth-child(${buildigItem[option.building]})`) // 「建物」コンボボックスアイテムの選択
