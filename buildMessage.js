@@ -1,6 +1,6 @@
 function errorMsg(message) {
   return inChannelMsg([
-    "⚠️エラー",
+    "⚠️ エラー",
     message
   ].join('\n'));
 }
