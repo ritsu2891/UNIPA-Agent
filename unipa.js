@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require('uuid');
 const path = require('path');
 
 const Util = require('./util');
+const { isEmpty } = require("lodash");
 
 dotenv.config();
 
@@ -80,11 +81,19 @@ async function loginUnipa() {
   }
 }
 
-async function mvToClassRoomReservePage() {
+async function mvToPageInMenuBar(n) {
   await Promise.all([
     page.waitForNavigation({ waitUntil: "networkidle2" }),
-    page.click("#menuForm\\:mainMenu > * > *:nth-child(7) > a")
+    page.click(`#menuForm\\:mainMenu > * > *:nth-child(${n}) > a`)
   ]);
+}
+
+async function mvToClassRoomReservePage() {
+  return await mvToPageInMenuBar(7);
+}
+
+async function mvToBulletinBoardPage() {
+  return await mvToPageInMenuBar(8);
 }
 
 /* -----------
@@ -146,4 +155,38 @@ async function dlClassRoomReserveStatus(option) {
   }
 }
 
-module.exports = {dlClassRoomReserveStatus, tierDown, getDownloadPath}
+async function getUnreadBullteinBoardMessageItems() {
+  try {
+    await init();
+    await loginUnipa();
+    await mvToBulletinBoardPage();
+
+    page.waitFor(10);
+    await page.click(`#funcForm\\:tabArea > ul > li:nth-child(6) > a`); // "未読"タブへ 6
+    const messageElems = await page.$$("#funcForm\\:tabArea\\:5\\:allScr > * > #keiji > a"); // メッセージ要素を取得
+    const messages = [];
+    for (messageElem of messageElems) {
+      messages.push(await messageElem.evaluate(node => node.innerText));
+    }
+    while (true) {
+      var selector = "#funcForm\\:tabArea\\:5\\:allScr > * > .inlineBlock > div:nth-child(2)";
+      var markAsReadButtons = await page.$$(selector);
+      if (markAsReadButtons.length == 0) {
+        page.waitFor(100);
+        break;
+      } else {
+        var oldlength = markAsReadButtons.length;
+        await Promise.all([
+          page.waitForFunction((selector, oldlength) => document.querySelectorAll(selector).length == oldlength - 1, {}, selector, oldlength),
+          markAsReadButtons[0].click()
+        ]);
+      }
+    }
+    return messages;
+  } catch (e) {
+    console.log(e);
+    await tierDown();
+  }
+}
+
+module.exports = {getUnreadBullteinBoardMessageItems, dlClassRoomReserveStatus, tierDown, getDownloadPath}
