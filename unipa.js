@@ -8,7 +8,7 @@ const path = require('path');
 const Util = require('./util');
 const { isEmpty } = require("lodash");
 
-dotenv.config();
+dotenv.config({path: path.resolve(__dirname, '.env')});
 
 const UNIPA_URL = "https://univ.aichi-pu.ac.jp/up/faces/login/Com00501A.jsp";
 const UNIPA_ID = process.env.UNIPA_ID;
@@ -30,7 +30,7 @@ async function init() {
   while (!uuid || fs.existsSync(downloadPath)) {
     uuid = uuidv4();
   }
-  downloadPath = path.join(process.env.DL_BASE_PATH, uuid);
+  downloadPath = path.join(__dirname, process.env.DL_BASE_PATH, uuid);
   fs.mkdirSync(downloadPath);
 
   const width = 1200

@@ -1,5 +1,3 @@
-require('dotenv').config();
-
 const express = require('express');
 const bodyParser = require('body-parser');
 const Slack = require('slack');
@@ -12,6 +10,9 @@ const UNIPA = require('./unipa');
 const Interpret = require('./interpret');
 const Parse = require('./parse');
 const Util = require('./util');
+
+const path = require('path');
+require('dotenv').config({path: path.resolve(__dirname, '.env')});
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
