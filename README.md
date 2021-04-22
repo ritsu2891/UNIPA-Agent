@@ -1,18 +1,19 @@
 <div align="center" style="vertical-align: center;">
-  <img alt="Slack" src="https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/Slack.svg" height="80px" style="margin-right: 15px;" />
-  <img alt="アイコン" src="https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/icon.png" height="80px" />
-  <h1>Slack-UNIPAAgent</h1>
+  <img alt="Slack" src="https://cdn.rpaka.dev/logo/slack.svg" height="80px" style="margin-right: 15px;" />
+  <img alt="pakabot" src="https://cdn.rpaka.dev/icon/pakabot.png" height="80px" style="margin-right: 15px;" />
+  <img alt="アイコン" src="https://cdn.rpaka.dev/icon/slack-unipa.png" height="80px" />
+  <h1>UNIPA-Agent</h1>
   <h1>UNIPAエージェント</h1>
-  <img alt="Node.js" src="https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/Node.svg" height="80px" style="margin-right: 15px;" />
-  <img alt="Puppeteer" src="https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/Puppeteer.svg" height="80px" />
+  <img alt="Node.js" src="https://cdn.rpaka.dev/logo/node.svg" height="80px" style="margin-right: 15px;" />
+  <img alt="Puppeteer" src="https://cdn.rpaka.dev/logo/puppeteer.svg" height="80px" />
 </div>
 <br>
 
-![動作イメージ](https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/in-use.gif)
+![動作イメージ](https://cdn.rpaka.dev/useimage/slack-unipa/in-use.gif)
 
 ## 概要
 
-日本システム技術株式会社の提供する大学向け学生支援システムである「[UNIVERSAL PASSPORT RX](https://www.jast-gakuen.com/rx/)」におけるデータの取得等をSlack経由で行えるようにする事を目指すものです。今のところ、**空き教室を調べる機能**と**未読の掲示を取得して既読としてマークする機能**しかつけていませんが今後何か新たに機能をつけるかもしれません。（頻繁に確認する項目から実装していくと思います。）
+日本システム技術株式会社の提供する大学向け学生支援システムである「[UNIVERSAL PASSPORT RX](https://www.jast-gakuen.com/rx/)」におけるデータの取得等をSlack/CLI経由で行えるようにする事を目指すものです。今のところ、**空き教室を調べる機能**と**未読の掲示を取得して既読としてマークする機能**しかつけていませんが今後何か新たに機能をつけるかもしれません。（頻繁に確認する項目から実装していくと思います。）
 
 ## 背景
 
@@ -24,11 +25,11 @@ Slack Botとして作りましたがSlack Bot自体を公開する予定はあ�
 
 ## 構成
 
-![構成](https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/arch.png)
+![構成](https://cdn.rpaka.dev/arch/slack-unipa.png)
 
 UNIPAはブラウザで操作する事が前提のサービスとなっており、ページ毎にURLが固定でなくJSONを返すAPIが用意されているなんて事も当然ながらない（もしくは非公開）ので以下のように実際にブラウザ（Headless Chrome）を起動してPuppeteerで操作するという事を行っています。
 
-![Puppeteerによる操作](https://raw.githubusercontent.com/ritsu2891/Slack-UNIPA-Agent/master/md-img/puppeteer.gif)
+![Puppeteerによる操作](https://cdn.rpaka.dev/useimage/slack-unipa/puppeteer.gif)
 
 空き教室などUNIPAから落とせる情報はExcel形式で手に入るため、Excelを読むライブラリを用いて必要なデータを取り出してSlackで送るという事を行っています。実際にブラウザを動かすという事で情報が得られるまで時間がかかりますが、まあしょうがないか…。
 
