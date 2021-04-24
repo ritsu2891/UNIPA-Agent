@@ -4,7 +4,7 @@
   <img alt="アイコン" src="https://cdn.rpaka.dev/icon/slack-unipa.png" height="80px" />
   <h1>UNIPA-Agent</h1>
   <h1>UNIPAエージェント</h1>
-  <img alt="Node.js" src="https://cdn.rpaka.dev/logo/node.svg" height="80px" style="margin-right: 15px;" />
+  <img alt="Node.js" src="https://cdn.rpaka.dev/logo/nodejs.svg" height="80px" style="margin-right: 15px;" />
   <img alt="Puppeteer" src="https://cdn.rpaka.dev/logo/puppeteer.svg" height="80px" />
 </div>
 <br>
